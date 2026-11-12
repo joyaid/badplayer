@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bad Player</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-bg-tone="pitch" data-density="comfortable" data-player-pos="bottom">
+  <!-- Ambient Background Visual Layers -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="cyber-grid-overlay"></div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Left Sidebar Navigation -->
+    <aside class="sidebar" aria-label="Main Navigation">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polygon points="5 3 19 12 5 21 5 3" fill="var(--accent)" stroke="var(--accent)"></polygon>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">BAD PLAYER</span>
+          <span class="brand-sub">by Joyaid</span>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-item active" data-view="home" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"/>
+          </svg>
+          <span>Home</span>
+        </button>
+
+        <button class="nav-item" data-view="library" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          <span>Library</span>
+        </button>
+
+        <button class="nav-item" data-view="player" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/>
+          </svg>
+          <span>Player</span>
+        </button>
+
+        <button class="nav-item" data-view="profile" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>Profile</span>
+        </button>
+
+        <button class="nav-item" data-view="settings" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Settings</span>
+        </button>
+
+        <!-- Hidden until unlocked in Settings for the active session -->
+        <button id="nav-admin" class="nav-item hidden" data-view="admin" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Admin</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-user-card" id="sidebar-user-trigger" title="View Profile">
+        <div class="sidebar-avatar" id="sidebar-avatar"></div>
+        <div class="sidebar-user-meta">
+          <div class="sidebar-user-name-row">
+            <span id="sidebar-username" class="truncate-text">Joyaid</span>
+            <span id="sidebar-badge" class="badge-slot"></span>
+          </div>
+          <span class="sidebar-user-role">Local Session</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <main class="main-content" id="main-content">
+
+        <!-- VIEW: HOME -->
+        <section id="view-home" class="view active">
+          <header class="view-header">
+            <div>
+              <p class="eyebrow">LOCAL AUDIO WORKSTATION</p>
+              <h1>Welcome back, <span id="home-username">Joyaid</span><span id="home-badge" class="badge-slot"></span></h1>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary" id="home-add-files-btn" type="button">+ Add Audio Files</button>
+              <button class="btn btn-secondary" data-goto="library" type="button">Open Library</button>
+            </div>
+          </header>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">Tracks in Library</span>
+              <span class="stat-value" id="stat-track-count">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Total Duration</span>
+              <span class="stat-value" id="stat-total-duration">0:00</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Active Profile</span>
+              <div class="stat-profile-name">
+                <span id="stat-active-profile">Joyaid</span>
+                <span id="stat-active-badge" class="badge-slot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-panels">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Quick Dropzone</h2>
+              </div>
+              <div class="dropzone" id="home-dropzone">
+                <div class="dropzone-glow-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--accent)" stroke-width="1.8">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <p class="dropzone-title">Drag &amp; drop audio files here</p>
+                <p class="dropzone-sub">MP3, WAV, OGG, FLAC, M4A — Stored locally in IndexedDB</p>
+                <button class="btn btn-outline" id="home-browse-btn" type="button">Browse Files</button>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Recent Tracks</h2>
+                <button class="btn-link" data-goto="library" type="button">View All</button>
+              </div>
+              <div id="home-recent-list" class="mini-track-list">
+                <p class="empty-hint">No tracks added yet. Drop some audio files to start listening.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: LIBRARY -->
+        <section id="view-library" class="view">
+          <header class="view-header">
+            <div>
+              <p class="eyebrow">PERSISTENT LOCAL STORAGE</p>
+              <h1>
+                <span id="library-owner-name">Joyaid</span><span id="library-owner-badge" class="badge-slot"></span>'s Library
+              </h1>
+            </div>
+            <div class="header-actions">
+              <input type="search" id="library-search" class="input-text" placeholder="Filter by title or artist..." aria-label="Search library" />
+              <button class="btn btn-primary" id="library-add-btn" type="button">+ Import Audio</button>
+              <button class="btn btn-danger-outline" id="library-clear-btn" type="button" title="Remove all stored tracks">Clear All</button>
+            </div>
+          </header>
+
+          <!-- Hidden File Input used across the app -->
+          <input type="file" id="file-input" multiple accept="audio/*" class="hidden" />
+
+          <div class="dropzone compact-dropzone" id="library-dropzone">
+            <span>Drop audio files anywhere in this box or click <strong>+ Import Audio</strong> to save tracks into your browser's IndexedDB.</span>
+          </div>
+
+          <div class="table-container">
+            <table class="track-table" aria-label="Audio Library">
+              <thead>
+                <tr>
+                  <th class="col-index">#</th>
+                  <th class="col-title">Title</th>
+                  <th class="col-artist">Artist</th>
+                  <th class="col-duration">Duration</th>
+                  <th class="col-actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="library-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+            <div id="library-empty" class="empty-state">
+              <p>Your library is empty.</p>
+              <p class="sub">Import local audio files to play them anytime—even after reloading or closing the tab.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: PLAYER -->
+        <section id="view-player" class="view">
+          <div class="now-playing-stage">
+            <div class="vinyl-stage-wrap">
+              <div class="vinyl-glow-ring" id="vinyl-glow-ring"></div>
+              <div class="vinyl-art" id="player-stage-art">
+                <div class="vinyl-grooves"></div>
+                <div class="vinyl-center">
+                  <span>BAD</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stage-meta">
+              <span class="eyebrow">NOW PLAYING</span>
+              <h1 id="stage-title">No Track Selected</h1>
+              <p id="stage-artist" class="stage-artist">Select or drop a track from your library</p>
+
+              <div class="stage-listener">
+                <span>Listening as </span>
+                <strong id="stage-username">Joyaid</strong>
+                <span id="stage-badge" class="badge-slot"></span>
+              </div>
+
+              <!-- Live Audio Spectrum Visualizer -->
+              <div class="visualizer-wrap">
+                <canvas id="audio-visualizer" width="460" height="68" aria-label="Audio Frequency Visualizer"></canvas>
+              </div>
+
+              <div class="stage-controls-row">
+                <button class="btn btn-secondary" id="stage-prev-btn" type="button">Previous</button>
+                <button class="btn btn-primary" id="stage-play-btn" type="button">Play / Pause</button>
+                <button class="btn btn-secondary" id="stage-next-btn" type="button">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel up-next-panel">
+            <div class="panel-header">
+              <h2>Playback Queue</h2>
+              <span id="queue-status-text" class="sub-label">0 tracks</span>
+            </div>
+            <div id="player-queue-list" class="mini-track-list"></div>
+          </div>
+        </section>
+
+        <!-- VIEW: PROFILE -->
+        <section id="view-profile" class="view">
+          <div class="profile-card">
+            <div class="profile-banner" id="profile-banner">
+              <div class="banner-overlay">
+                <label class="btn btn-secondary btn-sm" for="banner-upload-input">Change Banner</label>
+                <button class="btn btn-danger-outline btn-sm" id="banner-remove-btn" type="button">Reset</button>
+                <input type="file" id="banner-upload-input" accept="image/*" class="hidden" />
+              </div>
+            </div>
+
+            <div class="profile-header-body">
+              <div class="profile-avatar-wrapper">
+                <div class="profile-avatar" id="profile-avatar"></div>
+                <div class="avatar-actions">
+                  <label class="btn btn-secondary btn-xs" for="avatar-upload-input">Upload Avatar</label>
+                  <button class="btn btn-danger-outline btn-xs" id="avatar-remove-btn" type="button">Reset</button>
+                  <input type="file" id="avatar-upload-input" accept="image/*" class="hidden" />
+                </div>
+              </div>
+
+              <div class="profile-identity">
+                <div class="profile-name-line">
+                  <h1 id="profile-display-name">Joyaid</h1>
+                  <span id="profile-badge" class="badge-slot"></span>
+                </div>
+                <p id="profile-display-bio" class="profile-bio-text">Creator of Bad Player. Minimalist black &amp; red audio experience.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Edit Active Profile</h2>
+              </div>
+              <form id="profile-form" class="form-stack" novalidate>
+                <div class="form-group">
+                  <label for="profile-name-input">Display Name <span class="hint">(1–32 chars, required)</span></label>
+                  <input type="text" id="profile-name-input" class="input-text" maxlength="32" required />
+                  <p id="profile-name-error" class="form-error hidden"></p>
+                </div>
+
+                <div class="form-group">
+                  <label for="profile-bio-input">Short Bio <span class="hint">(max 160 chars)</span></label>
+                  <textarea id="profile-bio-input" class="input-textarea" rows="3" maxlength="160"></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Save Profile</button>
+                  <span id="profile-save-msg" class="save-feedback" aria-live="polite"></span>
+                </div>
+              </form>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Switch or Create Local Profile</h2>
+              </div>
+              <p class="panel-desc">All profiles are stored in this browser. Switch profiles or create another local listener account to test badges and customization.</p>
+              <div id="profile-switcher-list" class="profile-list"></div>
+
+              <form id="create-profile-form" class="inline-form" novalidate>
+                <input type="text" id="new-profile-name" class="input-text" placeholder="New profile name (max 32)" maxlength="32" />
+                <button type="submit" class="btn btn-secondary">+ Create</button>
+              </form>
+              <p id="create-profile-error" class="form-error hidden"></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: SETTINGS -->
+        <section id="view-settings" class="view">
+          <header class="view-header">
+            <div>
+              <p class="eyebrow">PREFERENCES &amp; APPEARANCE</p>
+              <h1>Settings</h1>
+            </div>
+            <div class="header-actions">
+              <button id="reset-settings-btn" class="btn btn-danger-outline" type="button">Reset Defaults</button>
+            </div>
+          </header>
+
+          <div class="settings-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Visual Customization</h2>
+              </div>
+              <div class="form-stack">
+                <div class="form-group">
+                  <label for="setting-accent">Accent Color</label>
+                  <div class="color-picker-row">
+                    <input type="color" id="setting-accent" value="#e11d48" />
+                    <div class="preset-swatches">
+                      <button type="button" class="swatch" data-color="#e11d48" style="background:#e11d48" title="Crimson Red"></button>
+                      <button type="button" class="swatch" data-color="#ff003c" style="background:#ff003c" title="Cyberpunk Neon Red"></button>
+                      <button type="button" class="swatch" data-color="#dc2626" style="background:#dc2626" title="Blood Scarlet"></button>
+                      <button type="button" class="swatch" data-color="#f97316" style="background:#f97316" title="Ember Orange"></button>
+                      <button type="button" class="swatch" data-color="#a855f7" style="background:#a855f7" title="Synthwave Violet"></button>
+                      <button type="button" class="swatch" data-color="#06b6d4" style="background:#06b6d4" title="Cyber Cyan"></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="setting-bg-tone">Background Tone &amp; Atmosphere</label>
+                  <select id="setting-bg-tone" class="input-select">
+                    <option value="pitch">Pitch Void Glass (#050507)</option>
+                    <option value="obsidian">Obsidian Liquid Glass (#0d0d12)</option>
+                    <option value="crimson-dark">Blood Neon Core (#140508)</option>
+                    <option value="brutalist">Carbon Brutalist Matte (#09090b)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="setting-font-size">Font Scale (<span id="font-size-label">16px</span>)</label>
+                  <input type="range" id="setting-font-size" min="14" max="19" step="1" value="16" />
+                </div>
+
+                <div class="form-group">
+                  <label for="setting-density">Layout Density</label>
+                  <select id="setting-density" class="input-select">
+                    <option value="comfortable">Comfortable</option>
+                    <option value="compact">Compact</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="setting-player-pos">Player Bar Position</label>
+                  <select id="setting-player-pos" class="input-select">
+                    <option value="bottom">Bottom Bar</option>
+                    <option value="top">Top Bar</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Admin Access</h2>
+              </div>
+              <p class="panel-desc">Unlock the session-only Admin panel to manage local user profiles, grant/revoke verified badges, and customize the badge icon.</p>
+              <form id="admin-unlock-form" class="form-stack" novalidate>
+                <div class="form-group">
+                  <label for="admin-password-input">Admin Password</label>
+                  <div class="inline-form">
+                    <input type="password" id="admin-password-input" class="input-text" placeholder="Enter password..." autocomplete="off" />
+                    <button type="submit" class="btn btn-primary" id="admin-unlock-btn">Unlock</button>
+                  </div>
+                  <p id="admin-password-error" class="form-error hidden">Wrong password</p>
+                  <p id="admin-unlock-success" class="save-feedback hidden">Admin panel unlocked for this session.</p>
+                </div>
+              </form>
+
+              <hr class="divider" />
+
+              <div class="settings-about">
+                <h3>About Bad Player</h3>
+                <p>Created by <strong>Joyaid</strong>. Runs 100% locally in your browser using IndexedDB and localStorage with zero external network calls.</p>
+                <p class="copyright-notice">Bad Player &copy; 2026 Joyaid. All rights reserved.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: ADMIN (Session-only) -->
+        <section id="view-admin" class="view">
+          <header class="view-header">
+            <div>
+              <p class="eyebrow">LOCAL SESSION ADMINISTRATION</p>
+              <h1>Admin Panel</h1>
+            </div>
+            <div class="header-actions">
+              <button id="admin-lock-btn" class="btn btn-danger-outline" type="button">Lock Session</button>
+            </div>
+          </header>
+
+          <div class="settings-grid">
+            <!-- Custom Badge Icon Manager -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Custom Badge Icon (Галочка)</h2>
+                <span class="sub-label">Strict 18&times;18px badge size</span>
+              </div>
+              <p class="panel-desc">
+                Replace the default verified checkmark with any custom image (PNG, GIF, WEBP, JPG, SVG). It is automatically scaled to exact badge dimensions so it never stretches across the page.
+              </p>
+
+              <div class="badge-preview-box">
+                <div class="badge-preview-sample">
+                  <span>Preview: <strong>Joyaid</strong></span>
+                  <span id="admin-badge-live-preview" class="badge-slot"></span>
+                </div>
+                <div class="badge-upload-actions">
+                  <label class="btn btn-primary btn-sm" for="admin-global-badge-input">Upload Badge Image</label>
+                  <button class="btn btn-danger-outline btn-sm" id="admin-reset-badge-btn" type="button">Reset to Default SVG</button>
+                  <input type="file" id="admin-global-badge-input" accept="image/*" class="hidden" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Profiles & Badges Management -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Local Profiles &amp; Verified Badges</h2>
+                <span class="sub-label">Saved immediately</span>
+              </div>
+              <p class="panel-desc">Grant or revoke the verified badge for any local profile, or assign a custom badge image to an individual user.</p>
+              <div id="admin-users-list" class="admin-user-list"></div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Persistent Footer -->
+      <footer class="app-footer">
+        <span>Bad Player &copy; 2026 Joyaid. All rights reserved.</span>
+        <span class="footer-sep">&bull;</span>
+        <span>100% Offline Local Web App</span>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Persistent Player Bar -->
+  <section class="player-bar" aria-label="Audio Player Controls">
+    <div class="player-track-info">
+      <div class="player-mini-disc" id="player-mini-disc">
+        <div class="eq-bars" id="mini-eq-bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="player-meta-text">
+        <div id="player-title" class="player-title truncate-text">No track loaded</div>
+        <div id="player-artist" class="player-artist truncate-text">Add local audio files to begin</div>
+      </div>
+    </div>
+
+    <div class="player-center">
+      <div class="player-buttons">
+        <button id="btn-shuffle" class="icon-btn" type="button" title="Toggle Shuffle" aria-label="Toggle Shuffle">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 3 21 3 21 8"/>
+            <line x1="4" y1="20" x2="21" y2="3"/>
+            <polyline points="21 16 21 21 16 21"/>
+            <line x1="15" y1="15" x2="21" y2="21"/>
+            <line x1="4" y1="4" x2="9" y2="9"/>
+          </svg>
+        </button>
+
+        <button id="btn-prev" class="icon-btn" type="button" title="Previous Track" aria-label="Previous Track">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="19 20 9 12 19 4 19 20" fill="currentColor"/>
+            <line x1="5" y1="19" x2="5" y2="5"/>
+          </svg>
+        </button>
+
+        <button id="btn-play" class="play-btn" type="button" title="Play or Pause" aria-label="Play or Pause">
+          <svg id="icon-play" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <polygon points="6 4 20 12 6 20 6 4"/>
+          </svg>
+          <svg id="icon-pause" class="hidden" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16"/>
+            <rect x="14" y="4" width="4" height="16"/>
+          </svg>
+        </button>
+
+        <button id="btn-next" class="icon-btn" type="button" title="Next Track" aria-label="Next Track">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 4 15 12 5 20 5 4" fill="currentColor"/>
+            <line x1="19" y1="5" x2="19" y2="19"/>
+          </svg>
+        </button>
+
+        <button id="btn-repeat" class="icon-btn" type="button" title="Repeat Mode: Off" aria-label="Toggle Repeat">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <polyline points="7 23 3 19 7 15"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+          <span id="repeat-badge" class="repeat-one-indicator hidden">1</span>
+        </button>
+      </div>
+
+      <div class="seek-row">
+        <span id="time-current" class="time-label">0:00</span>
+        <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" aria-label="Seek timeline" />
+        <span id="time-total" class="time-label">0:00</span>
+      </div>
+    </div>
+
+    <div class="player-volume">
+      <button id="btn-mute" class="icon-btn" type="button" title="Mute / Unmute" aria-label="Mute or Unmute">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+          <path id="vol-waves" d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+      </button>
+      <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.85" aria-label="Volume" />
+    </div>
+  </section>
+
+  <!-- Hidden HTML5 Audio Element -->
+  <audio id="audio-element" preload="metadata"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
